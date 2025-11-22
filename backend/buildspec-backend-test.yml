@@ -1,0 +1,22 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo Installing dependencies...
+      - pip install -r backend/requirements.txt
+  pre_build:
+    commands:
+      - echo Running unit tests...
+      - cd backend
+      - pytest test/ --junitxml=test-report.xml
+
+artifacts:
+  files:
+    - backend/test-report.xml
+  reports:
+    unittest:
+      files:
+        - backend/test-report.xml
+      file-format: JUNITXML

@@ -1,0 +1,43 @@
+.passenger-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: rgb(234, 234, 234);
+    padding: 20px;
+    z-index: 1;
+}
+
+.passenger-section {
+    margin-bottom: 20px;
+}
+
+.passenger-type,
+.class-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.class-btn {
+    padding: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    text-align: center;
+}
+
+.class-btn.selected {
+    background-color: rgb(77, 115, 252);
+    color: white;
+}

@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 084375550811.dkr.ecr.ap-southeast-1.amazonaws.com
+      - IMAGE_TAG=latest
+  build:
+    commands:
+      - echo Building the Docker image...
+      - cd backend
+      - docker build -t qairline-backend .
+      - docker tag qairline-backend:latest 084375550811.dkr.ecr.ap-southeast-1.amazonaws.com/qairline-backend:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push 084375550811.dkr.ecr.ap-southeast-1.amazonaws.com/qairline-backend:$IMAGE_TAG
+artifacts:
+  files:
+    - backend/prescript.sh
+    - backend/postscript.sh

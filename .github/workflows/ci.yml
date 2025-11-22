@@ -1,0 +1,89 @@
+name: Fullstack CI/CD Workflow 
+on:
+  push:
+    branches:
+      - main
+      - TranDuong874-cicd
+  pull_request:
+    branches:
+      - main
+      - TranDuong874-cicd
+
+# Workflow: 
+  #Build and Test Frontend 
+  #-> Build and Test Backend 
+  #-> Containerize Backend and Run Integration Tests (Integration tests == Test Frontend and Backend together)
+  #-> Publish Docker Image to Docker Hub
+  #-> CD: Deployment to Production (Checkout cd.yml file)
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking code
+        uses: actions/checkout@v3
+
+      - name: Setting up Node.js
+        uses: actions/setup-node@v3
+        with: 
+          node-version: ${{secrets.NODE_VERSION}}
+      
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install
+      
+      - name: Building Frontend
+        working-directory: frontend
+        run: npm run build
+        
+      - name: Testing Frontend
+        working-directory: frontend
+        # --: Tells npm to stop accepting flag, before -- is npm flag like npm install test -- other flags
+        run: npm test -- --passWithNoTests --ci
+      
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking code
+        uses: actions/checkout@v3
+      
+      - name: Setting up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ secrets.PYTHON_VERSION }}
+      
+      - name: Installing dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        working-directory: backend
+    
+  containerize_backend:
+    name: Containerize Backend and Run Integration Tests
+    runs-on: ubuntu-latest
+    needs: backend
+    steps:
+      - name: Checking code
+        uses: actions/checkout@v3
+      - name: Building Docker image
+        run: docker build ./backend/ -t tenebris2/qairline-repo:backend
+      - name: Running Integration Tests with docker-compose.test.yml
+        run: |
+          docker compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend
+          docker compose -f docker-compose.test.yml down --volumes
+        working-directory: backend
+    
+  
+  publish_docker_image:
+    name: Publish Docker Image to Docker Hub
+    runs-on: ubuntu-latest
+    needs: containerize_backend
+    steps:
+      - name: Checking code
+        uses: actions/checkout@v3
+      - name: Login to Docker Hub
+        run: docker login -u tenebris2 -p ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Push Docker image to Docker Hub
+        run: docker push tenebris2/qairline-repo:backend
+    
+    

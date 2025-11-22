@@ -1,0 +1,9 @@
+{
+    "firstname": "bill",
+    "lastname": "joe",
+    "email" : "quockhanh.hsgs@gmail.com",
+    "username": "admin",
+    "password": "abc123",
+    "role": "admin"
+}
+

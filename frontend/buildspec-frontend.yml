@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies..."
+      - cd frontend
+      - npm install
+  pre_build:
+    commands:
+      - echo "Checking Node.js version"
+      - node --version
+  build:
+    commands:
+      - echo "Running frontend build..."
+      - npm run build
+  post_build:
+    commands:
+      - echo "Build completed"
+
+artifacts:
+  base-directory: frontend/build
+  files:
+    - '**/*'
