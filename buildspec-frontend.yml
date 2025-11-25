@@ -15,7 +15,6 @@ phases:
   build:
     commands:
       - echo "Running React build"
-      - cd frontend
       - npm run build
   post_build:
     commands:
