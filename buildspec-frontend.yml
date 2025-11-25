@@ -5,48 +5,25 @@ phases:
     runtime-versions:
       nodejs: 22
     commands:
-      - echo "=== INSTALL phase ==="
-      - echo "PWD at start of INSTALL:"
-      - pwd
-      - echo "Files at start of INSTALL:"
-      - ls
       - echo "Installing dependencies for frontend"
       - cd frontend
-      - echo "PWD after cd frontend (INSTALL):"
-      - pwd
-      - echo "Files after cd frontend (INSTALL):"
-      - ls
       - npm install
 
   pre_build:
     commands:
-      - echo "=== PRE_BUILD phase ==="
-      - echo "PWD at start of PRE_BUILD:"
-      - pwd
-      - echo "Files at start of PRE_BUILD:"
-      - ls
       - echo "Node version:"
       - node --version
 
   build:
     commands:
-      - echo "=== BUILD phase ==="
-      - echo "PWD at start of BUILD:"
-      - pwd
-      - echo "Files at start of BUILD:"
-      - ls
       - echo "Running React build"
       - npm run build
+      - echo "Copy buildspec-frontend-test.yml into build folder for Integration Test"
+      - cp ../buildspec-frontend-test.yml build/buildspec-frontend-test.yml
+      - cp ../buildspec-frontend-invalidate.yml build/buildspec-frontend-invalidate.yml
 
   post_build:
     commands:
-      - echo "=== POST_BUILD phase ==="
-      - echo "PWD at start of POST_BUILD:"
-      - pwd
-      - echo "Files at start of POST_BUILD:"
-      - ls
-      - echo "Content of build directory (if exists):"
-      - ls build || echo "build directory not found"
       - echo "Build completed"
 
 artifacts:
