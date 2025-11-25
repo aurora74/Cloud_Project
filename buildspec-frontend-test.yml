@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "=== FRONTEND INTEGRATION TEST ==="
+      - echo "PWD:" && pwd
+      - echo "Files in artifact root:" && ls
+      - echo "Check for index.html"
+      - test -f index.html
+      - echo "index.html exists - basic smoke test passed"

@@ -1,0 +1,15 @@
+version: 0.2
+
+env:
+  variables:
+    DISTRIBUTION_ID: "E19JLQ0SVHZNG5"   
+
+phases:
+  build:
+    commands:
+      - echo "=== CLOUDFRONT INVALIDATION PHASE ==="
+      - echo "Invalidating distribution $DISTRIBUTION_ID"
+      - aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*"
+      - echo "Invalidation request submitted"
+
+# Không cần artifacts

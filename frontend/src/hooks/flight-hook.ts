@@ -80,7 +80,7 @@ export async function fetchFlightSeats(flight_id: number) {
 export async function fetchFlightSeatsPrice(flight_id: number) {
     try {
         const response = await axios.get(
-            `/api/flights/flight-seats/${flight_id}/prices`
+            `/api/flights/flight-seats/${flight_id}/prices/`
         );
 
         const flights_price = response.data;
