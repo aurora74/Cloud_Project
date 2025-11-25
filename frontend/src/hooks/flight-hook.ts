@@ -66,7 +66,7 @@ export async function updateFlight(
 
 export async function fetchFlightSeats(flight_id: number) {
     try {
-        const response = await axios.get(`/api/flights/flight-seats/${flight_id}`);
+        const response = await axios.get(`/api/flights/flight-seats/${flight_id}/`);
 
         const flights_matrix = response.data;
 
