@@ -6,3 +6,5 @@ env
 backend/.env
 backend/static/*
 *.pem
+/.github
+/.github/workflows

@@ -21,8 +21,6 @@
 .env.development
 .env.production
 
-/.github
-/.github/workflows
 
 npm-debug.log*
 yarn-debug.log*
