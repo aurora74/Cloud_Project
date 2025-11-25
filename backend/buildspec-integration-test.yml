@@ -1,0 +1,35 @@
+version: 0.2
+
+env:
+  variables:
+    BACKEND_HEALTH_URL: "http://qairline-backend-alb-230260088.ap-southeast-1.elb.amazonaws.com/docs" 
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "=== BACKEND INTEGRATION TEST / INSTALL ==="
+      - echo "PWD:" && pwd
+
+  build:
+    commands:
+      - echo "=== BACKEND INTEGRATION TEST / BUILD ==="
+      - echo "Health URL: $BACKEND_HEALTH_URL"
+      - |
+        if [ -z "$BACKEND_HEALTH_URL" ]; then
+          echo "BACKEND_HEALTH_URL is not set"
+          exit 1
+        fi
+      - echo "Calling health endpoint..."
+      - curl -f "$BACKEND_HEALTH_URL"
+      - echo "Health check OK"
+
+  post_build:
+    commands:
+      - echo "=== BACKEND INTEGRATION TEST / DONE ==="
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes

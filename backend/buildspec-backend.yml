@@ -1,22 +1,51 @@
 version: 0.2
 
+env:
+  variables:
+    AWS_REGION: ap-southeast-1
+    AWS_ACCOUNT_ID: "840016550365"
+    ECR_REPO_NAME: "qairline-backend"
+    IMAGE_TAG: "latest"
+
 phases:
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo "=== BACKEND BUILD / INSTALL ==="
+      - echo "PWD:" && pwd
+      - echo "Repo root:" && ls
+      - echo "cd backend"
+      - cd backend
+      - echo "PWD after cd backend:" && pwd
+      - echo "Files in backend:" && ls
+
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 084375550811.dkr.ecr.ap-southeast-1.amazonaws.com
-      - IMAGE_TAG=latest
+      - echo "=== BACKEND BUILD / PRE_BUILD ==="
+      - aws --version
+      - >
+        aws ecr get-login-password --region $AWS_REGION |
+        docker login --username AWS --password-stdin \
+        $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG
+      - echo "IMAGE_URI=$IMAGE_URI"
+
   build:
     commands:
-      - echo Building the Docker image...
-      - cd backend
-      - docker build -t qairline-backend .
-      - docker tag qairline-backend:latest 084375550811.dkr.ecr.ap-southeast-1.amazonaws.com/qairline-backend:$IMAGE_TAG
+      - echo "=== BACKEND BUILD / BUILD (docker build) ==="
+      - echo "PWD:" && pwd
+      - docker build -t $ECR_REPO_NAME:$IMAGE_TAG .
+      - docker tag $ECR_REPO_NAME:$IMAGE_TAG $IMAGE_URI
+
   post_build:
     commands:
-      - echo Pushing the Docker image...
-      - docker push 084375550811.dkr.ecr.ap-southeast-1.amazonaws.com/qairline-backend:$IMAGE_TAG
+      - echo "=== BACKEND BUILD / POST_BUILD (docker push) ==="
+      - docker push $IMAGE_URI
+      - printf '[{"name":"qairline-backend","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
+      - echo "imagedefinitions.json created in backend/"
+
 artifacts:
   files:
-    - backend/prescript.sh
-    - backend/postscript.sh
+    - '**/*'
+  discard-paths: yes
