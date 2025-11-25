@@ -25,7 +25,7 @@ import { fetchAirport } from "hooks/airport-hook";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
 
 const FlightSearch: React.FC = () => {
   const navigate = useNavigate();
@@ -68,7 +68,6 @@ const FlightSearch: React.FC = () => {
     setFlights,
     setLoading,
   } = useFlightSearchStore();
-
 
   useEffect(() => {
     if (tripType === "roundtrip") {

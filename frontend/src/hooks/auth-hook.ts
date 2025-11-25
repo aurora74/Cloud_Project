@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "./axios-config";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "";
 export const useAuth = () => {
   const [isLogin] = useState<boolean | null>(null);
 

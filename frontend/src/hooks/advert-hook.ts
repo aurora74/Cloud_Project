@@ -67,7 +67,7 @@ export async function deleteAdvert(advertName: string) {
 
 export async function getAdverts() {
     try {
-        const response = await axios.get("/api/advert");
+        const response = await axios.get("/api/advert/");
         return response.data;
     } catch (error) {
         console.error("Error getting adverts", error);
